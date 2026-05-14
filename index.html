@@ -3,84 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zhyar TV | Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&display=swap" rel="stylesheet">
+    <title>ZHYAR TV</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: radial-gradient(circle at top, #1a1a2e, #000000); color: white; font-family: sans-serif; min-height: 100vh; }
-        .header { width: 100%; padding: 25px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); text-align: center; position: sticky; top: 0; z-index: 100; }
-        .logo-text { font-family: 'Unbounded', sans-serif; font-size: 30px; background: linear-gradient(45deg, #00f2fe, #7117ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .player-wrapper { width: 95%; max-width: 800px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 2px solid #7117ea; }
-        video { width: 100%; display: block; background: #000; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; padding: 20px; }
-        .card { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 10px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: #00f2fe; background: rgba(113, 23, 234, 0.2); }
-        .card img { width: 55px; height: 55px; border-radius: 12px; margin-bottom: 5px; object-fit: cover; }
-        .card span { display: block; font-size: 11px; font-weight: bold; }
+        body { background-color: #0f0f1a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; }
+        .header { color: #00d2ff; font-size: 26px; font-weight: bold; margin: 15px 0; text-transform: uppercase; letter-spacing: 2px; }
+        .video-container { width: 100%; max-width: 700px; margin: 0 auto 15px; border: 2px solid #6f42c1; border-radius: 12px; overflow: hidden; background: black; box-shadow: 0 0 15px rgba(111, 66, 193, 0.4); }
+        video { width: 100%; aspect-ratio: 16/9; display: block; }
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
+        .channel-btn { background: #1a1a2e; border: 1px solid #333; padding: 12px; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
+        .channel-btn:active { transform: scale(0.95); background: #252545; }
+        .channel-btn img { width: 55px; height: 55px; margin-bottom: 8px; object-fit: contain; background: white; border-radius: 8px; padding: 3px; }
+        .channel-btn span { font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<header class="header">
-    <div class="logo-text">ZHYAR TV</div>
-</header>
+    <div class="header">ZHYAR TV</div>
 
-<div class="player-wrapper">
-    <video id="tvPlayer" controls autoplay poster="https://via.placeholder.com/800x450/000?text=Zhyar+TV"></video>
-</div>
-
-<div class="grid-container" id="channelList">
+    <div class="video-container">
+        <video id="video" controls autoplay></video>
     </div>
 
-<script>
-    // لیستی ٣٠ کەناڵە کوردییەکان - لینکەکان لێرە دابنێ
-    const channels = [
-        { name: "Rudaw HD", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Rudaw_Logo.png", url: "" },
-        { name: "Kurdsat News", logo: "https://kurdsat.tv/images/logo.png", url: "" },
-        { name: "NRT News", logo: "https://nrttv.com/images/logo.png", url: "" },
-        { name: "K24 HD", logo: "https://www.kurdistan24.net/images/logo.png", url: "" },
-        { name: "WAAR TV", logo: "https://waartv.net/images/logo.png", url: "" },
-        { name: "Channel 8", logo: "", url: "" },
-        { name: "AVA Media", logo: "", url: "" },
-        { name: "Avar TV", logo: "", url: "" },
-        { name: "Hormzyar HD", logo: "", url: "" },
-        { name: "Ala TV", logo: "", url: "" },
-        { name: "NRT 2", logo: "", url: "" },
-        { name: "NRT 4", logo: "", url: "" },
-        { name: "4 Kurd HD", logo: "", url: "" },
-        { name: "Afarin Kids", logo: "", url: "" },
-        { name: "Afarin Baxcha", logo: "", url: "" },
-        { name: "Afarin Radio", logo: "", url: "" },
-        { name: "Al Yaum TV", logo: "", url: "" },
-        { name: "Red TV", logo: "", url: "" },
-        { name: "Mix Kurdish", logo: "", url: "" },
-        { name: "MMN News", logo: "", url: "" },
-        { name: "MMN Movies", logo: "", url: "" },
-        { name: "MMN Sport", logo: "", url: "" },
-        { name: "MMN Action", logo: "", url: "" },
-        { name: "Bein Sport 1", logo: "", url: "" },
-        { name: "Bein Sport 2", logo: "", url: "" },
-        { name: "UFC Channel", logo: "", url: "" },
-        { name: "Parwarday Hawler", logo: "", url: "" },
-        { name: "Parwarday Slemani", logo: "", url: "" },
-        { name: "Parwarday Dehok", logo: "", url: "" },
-        { name: "Kurdish Sport", logo: "", url: "" }
-    ];
+    <div class="grid-container" id="channel-grid">
+        </div>
 
-    const list = document.getElementById('channelList');
-    channels.forEach(ch => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.onclick = () => {
-            const v = document.getElementById('tvPlayer');
-            v.src = ch.url;
-            v.play();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        div.innerHTML = `<img src="${ch.logo || 'https://via.placeholder.com/100?text=TV'}" alt="Logo"><span>${ch.name}</span>`;
-        list.appendChild(div);
-    });
-</script>
+    <script>
+        const channels = [
+            { name: "Rudaw HD", link: "https://shls-rudaw-prod.mediaminer.me/rudaw/livestream/playlist.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rudaw_Logo.png/600px-Rudaw_Logo.png" },
+            { name: "NRT News", link: "https://nrttv.com/live/index.m3u8", logo: "https://www.nrttv.com/Content/images/logo_nrt.png" },
+            { name: "Kurdsat News", link: "https://v7.shls.news/hls/kurdsat/index.m3u8", logo: "https://kurdsat.tv/images/logo.png" },
+            { name: "Channel 8", link: "https://channel8.com/live/index.m3u8", logo: "https://channel8.com/assets/img/logo-c8.png" },
+            { name: "WAAR TV", link: "https://waartv.com/live/index.m3u8", logo: "https://waartv.com/wp-content/uploads/2021/05/logo.png" },
+            { name: "Kurdistan 24", link: "https://live.kurdistan24.net/hls/k24.m3u8", logo: "https://www.kurdistan24.net/assets/images/logo.png" },
+            { name: "Ava Entertainment", link: "https://ava.stream.me/hls/ava.m3u8", logo: "https://avatv.net/assets/images/logo.png" },
+            { name: "NRT 2", link: "https://nrttv.com/live/nrt2.m3u8", logo: "https://www.nrttv.com/Content/images/nrt2_logo.png" },
+            { name: "Kurdsat HD", link: "https://v7.shls.news/hls/kurdsat_hd/index.m3u8", logo: "https://kurdsat.tv/images/logo.png" },
+            { name: "Pelistank TV", link: "https://v7.shls.news/hls/pelistank/index.m3u8", logo: "https://pelistank.tv/images/logo.png" },
+            { name: "Kurdmax Music", link: "", logo: "https://kurdmax.tv/images/music-logo.png" },
+            { name: "Kurdmax Show", link: "", logo: "https://kurdmax.tv/images/show-logo.png" },
+            { name: "Speda TV", link: "", logo: "https://via.placeholder.com/150?text=Speda" },
+            { name: "Payam TV", link: "", logo: "https://via.placeholder.com/150?text=Payam" },
+            { name: "KNN", link: "", logo: "https://via.placeholder.com/150?text=KNN" },
+            { name: "Net TV", link: "", logo: "https://via.placeholder.com/150?text=Net" },
+            { name: "Duhok TV", link: "", logo: "https://via.placeholder.com/150?text=Duhok" },
+            { name: "Kirkuk TV", link: "", logo: "https://via.placeholder.com/150?text=Kirkuk" },
+            { name: "Avar TV", link: "", logo: "https://via.placeholder.com/150?text=Avar" },
+            { name: "Hormzyar HD", link: "", logo: "https://via.placeholder.com/150?text=Hormzyar" }
+            // دەتوانیت تا ٣٠ کەناڵ بەم شێوەیە لێرەدا زیادیان بکەیت
+        ];
 
+        const grid = document.getElementById('channel-grid');
+        const video = document.getElementById('video');
+        let hls = new Hls();
+
+        channels.forEach(ch => {
+            const btn = document.createElement('div');
+            btn.className = 'channel-btn';
+            btn.innerHTML = `<img src="${ch.logo}" alt="${ch.name}"><span>${ch.name}</span>`;
+            btn.onclick = () => {
+                if (ch.link === "") {
+                    alert("ئەم کەناڵە هێشتا لینکی m3u8 بۆ دانەنراوە!");
+                } else {
+                    playM3U8(ch.link);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+            grid.appendChild(btn);
+        });
+
+        function playM3U8(url) {
+            if (Hls.isSupported()) {
+                hls.destroy();
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.play();
+            }
+        }
+        
+        playM3U8(channels[0].link);
+    </script>
 </body>
 </html>
