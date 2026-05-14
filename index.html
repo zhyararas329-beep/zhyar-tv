@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zhyar TV | Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: radial-gradient(circle at top, #1a1a2e, #000000); color: white; font-family: sans-serif; min-height: 100vh; }
+        .header { width: 100%; padding: 25px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); text-align: center; position: sticky; top: 0; z-index: 100; }
+        .logo-text { font-family: 'Unbounded', sans-serif; font-size: 30px; background: linear-gradient(45deg, #00f2fe, #7117ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .player-wrapper { width: 95%; max-width: 800px; margin: 20px auto; border-radius: 20px; overflow: hidden; border: 2px solid #7117ea; }
+        video { width: 100%; display: block; background: #000; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; padding: 20px; }
+        .card { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 10px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: #00f2fe; background: rgba(113, 23, 234, 0.2); }
+        .card img { width: 55px; height: 55px; border-radius: 12px; margin-bottom: 5px; object-fit: cover; }
+        .card span { display: block; font-size: 11px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-text">ZHYAR TV</div>
+</header>
+
+<div class="player-wrapper">
+    <video id="tvPlayer" controls autoplay poster="https://via.placeholder.com/800x450/000?text=Zhyar+TV"></video>
+</div>
+
+<div class="grid-container" id="channelList">
+    </div>
+
+<script>
+    // لیستی ٣٠ کەناڵە کوردییەکان - لینکەکان لێرە دابنێ
+    const channels = [
+        { name: "Rudaw HD", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Rudaw_Logo.png", url: "" },
+        { name: "Kurdsat News", logo: "https://kurdsat.tv/images/logo.png", url: "" },
+        { name: "NRT News", logo: "https://nrttv.com/images/logo.png", url: "" },
+        { name: "K24 HD", logo: "https://www.kurdistan24.net/images/logo.png", url: "" },
+        { name: "WAAR TV", logo: "https://waartv.net/images/logo.png", url: "" },
+        { name: "Channel 8", logo: "", url: "" },
+        { name: "AVA Media", logo: "", url: "" },
+        { name: "Avar TV", logo: "", url: "" },
+        { name: "Hormzyar HD", logo: "", url: "" },
+        { name: "Ala TV", logo: "", url: "" },
+        { name: "NRT 2", logo: "", url: "" },
+        { name: "NRT 4", logo: "", url: "" },
+        { name: "4 Kurd HD", logo: "", url: "" },
+        { name: "Afarin Kids", logo: "", url: "" },
+        { name: "Afarin Baxcha", logo: "", url: "" },
+        { name: "Afarin Radio", logo: "", url: "" },
+        { name: "Al Yaum TV", logo: "", url: "" },
+        { name: "Red TV", logo: "", url: "" },
+        { name: "Mix Kurdish", logo: "", url: "" },
+        { name: "MMN News", logo: "", url: "" },
+        { name: "MMN Movies", logo: "", url: "" },
+        { name: "MMN Sport", logo: "", url: "" },
+        { name: "MMN Action", logo: "", url: "" },
+        { name: "Bein Sport 1", logo: "", url: "" },
+        { name: "Bein Sport 2", logo: "", url: "" },
+        { name: "UFC Channel", logo: "", url: "" },
+        { name: "Parwarday Hawler", logo: "", url: "" },
+        { name: "Parwarday Slemani", logo: "", url: "" },
+        { name: "Parwarday Dehok", logo: "", url: "" },
+        { name: "Kurdish Sport", logo: "", url: "" }
+    ];
+
+    const list = document.getElementById('channelList');
+    channels.forEach(ch => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.onclick = () => {
+            const v = document.getElementById('tvPlayer');
+            v.src = ch.url;
+            v.play();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        div.innerHTML = `<img src="${ch.logo || 'https://via.placeholder.com/100?text=TV'}" alt="Logo"><span>${ch.name}</span>`;
+        list.appendChild(div);
+    });
+</script>
+
+</body>
+</html>
