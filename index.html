@@ -1,91 +1,61 @@
-<!DOCTYPE html>
-<html lang="ku" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZHYAR TV</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-        body { background-color: #0f0f1a; color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 10px; }
-        .header { color: #00d2ff; font-size: 26px; font-weight: bold; margin: 15px 0; text-transform: uppercase; letter-spacing: 2px; }
-        .video-container { width: 100%; max-width: 700px; margin: 0 auto 15px; border: 2px solid #6f42c1; border-radius: 12px; overflow: hidden; background: black; box-shadow: 0 0 15px rgba(111, 66, 193, 0.4); }
-        video { width: 100%; aspect-ratio: 16/9; display: block; }
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; max-width: 600px; margin: 0 auto; padding-bottom: 30px; }
-        .channel-btn { background: #1a1a2e; border: 1px solid #333; padding: 12px; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
-        .channel-btn:active { transform: scale(0.95); background: #252545; }
-        .channel-btn img { width: 55px; height: 55px; margin-bottom: 8px; object-fit: contain; background: white; border-radius: 8px; padding: 3px; }
-        .channel-btn span { font-size: 13px; font-weight: bold; }
-    </style>
-</head>
-<body>
+const channelList = [
+    // === کەناڵە گشتی و هەواڵییەکان ===
+    { name: "Rudaw TV", logo: "https://i.postimg.cc/rpTvrtr0/Pics-Art-25-08-01-14-36-12-848.png", url: "https://svs.itworkscdn.net/rudawlive/rudawlive.smil/rudawpublish/rudawtv_source/chunks.m3u8" },
+    { name: "Kurdistan 24", logo: "https://i.postimg.cc/HnMqM0BM/Pics-Art-25-08-01-14-37-22-115.png", url: "https://d1x82nydcxndze.cloudfront.net/live/index.m3u8" },
+    { name: "Channel 8", logo: "https://i.postimg.cc/Gd1prmrY/c8.png", url: "https://live.channel8.com/Channel8-Kurdish/index.m3u8" },
+    { name: "Ava TV", logo: "https://i.postimg.cc/GbX6v0gL/ava-1.png", url: "https://hlspackager.akamaized.net/live/DB/AVA_TV/HLS/AVA_TV.m3u8" },
+    { name: "Kurdsat HD", logo: "https://i.postimg.cc/wgWn2wWv/kurdsat-1.png", url: "https://hlspackager.akamaized.net/live/DB/KURDSAT_HD/HLS/KURDSAT_HD.m3u8" },
+    { name: "Kurdsat News", logo: "https://i.postimg.cc/Qs6v4tt4/kurdstan.png", url: "https://hlspackager.akamaized.net/live/DB/KURDSAT_NEWS/HLS/KURDSAT_NEWS.m3u8" },
+    { name: "NRT 1", logo: "https://i.postimg.cc/mD8Z8x8L/nrt.png", url: "https://live.nrttv.com/nrt1/index.m3u8" },
+    { name: "NRT 2", logo: "https://i.postimg.cc/mD8Z8x8L/nrt.png", url: "https://live.nrttv.com/nrt2/index.m3u8" },
+    { name: "NRT 3 (Kids)", logo: "https://i.postimg.cc/mD8Z8x8L/nrt.png", url: "https://live.nrttv.com/nrt3/index.m3u8" },
+    { name: "NRT 4 (Religious)", logo: "https://i.postimg.cc/mD8Z8x8L/nrt.png", url: "https://live.nrttv.com/nrt4/index.m3u8" },
+    { name: "Gali Kurdistan", logo: "https://i.postimg.cc/CYWrW24y/krd.png", url: "https://gk.cdn.mangomolo.com/gk/smil:gk.smil/playlist.m3u8" },
+    { name: "Waar TV", logo: "https://i.postimg.cc/2zM3CTcM/KURDMAX.png", url: "https://waartv.com/live/stream.m3u8" },
+    { name: "Kurdmax Show", logo: "https://i.postimg.cc/2zM3CTcM/KURDMAX.png", url: "https://live.kurdmax.tv/show/index.m3u8" },
+    { name: "Kurdmax Pepule", logo: "https://i.postimg.cc/2zM3CTcM/KURDMAX.png", url: "https://live.kurdmax.tv/pepule/index.m3u8" },
+    { name: "Payam TV", logo: "https://placehold.co/40?text=Payam", url: "https://live.payam.tv/hls/stream.m3u8" },
+    { name: "Kirkuk TV", logo: "https://placehold.co/40?text=Kirkuk", url: "https://live.kirkuktv.net/hls/stream.m3u8" },
+    { name: "Speda TV", logo: "https://placehold.co/40?text=Speda", url: "https://live.speda.net/hls/stream.m3u8" },
+    { name: "Zarok TV", logo: "https://i.postimg.cc/J8x0qQhq/ZARO.png", url: "https://zindikurmanci.zaroktv.com.tr/hls/0/stream.m3u8" },
+    { name: "Amojgari TV", logo: "https://i.postimg.cc/Dvc3yP7n/amojgari.png", url: "https://app-live.org/live/3268334b/index.m3u8" },
 
-    <div class="header">ZHYAR TV</div>
+    // === کەناڵە وەرزشییە بەناوبانگەکان (پەخشی ڕاستەوخۆ) ===
+    { name: "beIN Sports News", logo: "https://placehold.co/40?text=beIN+News", url: "https://beinsports.akamaized.net/ps/live/playlist.m3u8" },
+    { name: "AD Sports 1 (Abu Dhabi)", logo: "https://placehold.co/40?text=AD+1", url: "https://adsports1.akamaized.net/hls/live/2014234/adsports1/master.m3u8" },
+    { name: "AD Sports 2 (Abu Dhabi)", logo: "https://placehold.co/40?text=AD+2", url: "https://adsports2.akamaized.net/hls/live/2014235/adsports2/master.m3u8" },
+    { name: "Al Kass One HD", logo: "https://placehold.co/40?text=Kass+1", url: "https://alkass.akamaized.net/alkassone/live.m3u8" },
+    { name: "Al Kass Two HD", logo: "https://placehold.co/40?text=Kass+2", url: "https://alkass.akamaized.net/alkasstwo/live.m3u8" },
+    { name: "KSA Sports 1 HD", logo: "https://placehold.co/40?text=KSA+1", url: "https://ksasports1.akamaized.net/hls/live/2017265/ksasports1/index.m3u8" },
+    { name: "Dubai Sports 1", logo: "https://placehold.co/40?text=Dubai+Sp", url: "https://dubaisports.akamaized.net/hls/live/2014237/dubaisports/master.m3u8" },
 
-    <div class="video-container">
-        <video id="video" controls autoplay></video>
-    </div>
+    // === کەناڵە جیهانی و دیکۆمێنتارییەکان ===
+    { name: "BBC News Arabic", logo: "https://placehold.co/40?text=BBC", url: "https://bbc.akamaized.net/hls/live/2014211/bbcnews/master.m3u8" },
+    { name: "Al Jazeera Arabic", logo: "https://placehold.co/40?text=Jazeera", url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8" },
+    { name: "TRT Arabic HD", logo: "https://placehold.co/40?text=TRT", url: "https://trtarabic.akamaized.net/hls/live/2014223/trtarabic/master.m3u8" },
+    { name: "RT Arabic HD", logo: "https://placehold.co/40?text=RT", url: "https://rtarabic.akamaized.net/hls/live/2014217/rtarabic/master.m3u8" },
+    { name: "Sky News Arabia", logo: "https://placehold.co/40?text=Sky", url: "https://skynews.akamaized.net/hls/live/2014220/skynews/master.m3u8" },
+    { name: "National Geo Abu Dhabi", logo: "https://placehold.co/40?text=Nat+Geo", url: "https://natgeo.akamaized.net/hls/live/2014230/natgeo/master.m3u8" },
 
-    <div class="grid-container" id="channel-grid">
-        </div>
+    // === کەناڵەکانی فیلم و منداڵانی عەرەبی ===
+    { name: "MBC 1 HD", logo: "https://placehold.co/40?text=MBC1", url: "https://mbc1.akamaized.net/hls/live/2014241/mbc1/master.m3u8" },
+    { name: "MBC 2 (Movies)", logo: "https://placehold.co/40?text=MBC2", url: "https://mbc2.akamaized.net/hls/live/2014242/mbc2/master.m3u8" },
+    { name: "MBC 4 HD", logo: "https://placehold.co/40?text=MBC4", url: "https://mbc4.akamaized.net/hls/live/2014244/mbc4/master.m3u8" },
+    { name: "MBC Action", logo: "https://placehold.co/40?text=Action", url: "https://mbcaction.akamaized.net/hls/live/2014245/mbcaction/master.m3u8" },
+    { name: "MBC Max", logo: "https://placehold.co/40?text=Max", url: "https://mbcmax.akamaized.net/hls/live/2014246/mbcmax/master.m3u8" },
+    { name: "MBC Bollywood", logo: "https://placehold.co/40?text=Bolly", url: "https://mbcbollywood.akamaized.net/hls/live/2014247/mbcbollywood/master.m3u8" },
+    { name: "MBC3 (Kids)", logo: "https://placehold.co/40?text=MBC3", url: "https://mbc3.akamaized.net/hls/live/2014243/mbc3/master.m3u8" },
+    { name: "Spacetoon HD", logo: "https://placehold.co/40?text=Spacetoon", url: "https://spacetoon.akamaized.net/hls/live/2014250/spacetoon/master.m3u8" },
+    { name: "Majid Kids", logo: "https://placehold.co/40?text=Majid", url: "https://majid.akamaized.net/hls/live/2014251/majid/master.m3u8" },
 
-    <script>
-        const channels = [
-            { name: "Rudaw HD", link: "https://shls-rudaw-prod.mediaminer.me/rudaw/livestream/playlist.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rudaw_Logo.png/600px-Rudaw_Logo.png" },
-            { name: "NRT News", link: "https://nrttv.com/live/index.m3u8", logo: "https://www.nrttv.com/Content/images/logo_nrt.png" },
-            { name: "Kurdsat News", link: "https://v7.shls.news/hls/kurdsat/index.m3u8", logo: "https://kurdsat.tv/images/logo.png" },
-            { name: "Channel 8", link: "https://channel8.com/live/index.m3u8", logo: "https://channel8.com/assets/img/logo-c8.png" },
-            { name: "WAAR TV", link: "https://waartv.com/live/index.m3u8", logo: "https://waartv.com/wp-content/uploads/2021/05/logo.png" },
-            { name: "Kurdistan 24", link: "https://live.kurdistan24.net/hls/k24.m3u8", logo: "https://www.kurdistan24.net/assets/images/logo.png" },
-            { name: "Ava Entertainment", link: "https://ava.stream.me/hls/ava.m3u8", logo: "https://avatv.net/assets/images/logo.png" },
-            { name: "NRT 2", link: "https://nrttv.com/live/nrt2.m3u8", logo: "https://www.nrttv.com/Content/images/nrt2_logo.png" },
-            { name: "Kurdsat HD", link: "https://v7.shls.news/hls/kurdsat_hd/index.m3u8", logo: "https://kurdsat.tv/images/logo.png" },
-            { name: "Pelistank TV", link: "https://v7.shls.news/hls/pelistank/index.m3u8", logo: "https://pelistank.tv/images/logo.png" },
-            { name: "Kurdmax Music", link: "", logo: "https://kurdmax.tv/images/music-logo.png" },
-            { name: "Kurdmax Show", link: "", logo: "https://kurdmax.tv/images/show-logo.png" },
-            { name: "Speda TV", link: "", logo: "https://via.placeholder.com/150?text=Speda" },
-            { name: "Payam TV", link: "", logo: "https://via.placeholder.com/150?text=Payam" },
-            { name: "KNN", link: "", logo: "https://via.placeholder.com/150?text=KNN" },
-            { name: "Net TV", link: "", logo: "https://via.placeholder.com/150?text=Net" },
-            { name: "Duhok TV", link: "", logo: "https://via.placeholder.com/150?text=Duhok" },
-            { name: "Kirkuk TV", link: "", logo: "https://via.placeholder.com/150?text=Kirkuk" },
-            { name: "Avar TV", link: "", logo: "https://via.placeholder.com/150?text=Avar" },
-            { name: "Hormzyar HD", link: "", logo: "https://via.placeholder.com/150?text=Hormzyar" }
-            // دەتوانیت تا ٣٠ کەناڵ بەم شێوەیە لێرەدا زیادیان بکەیت
-        ];
-
-        const grid = document.getElementById('channel-grid');
-        const video = document.getElementById('video');
-        let hls = new Hls();
-
-        channels.forEach(ch => {
-            const btn = document.createElement('div');
-            btn.className = 'channel-btn';
-            btn.innerHTML = `<img src="${ch.logo}" alt="${ch.name}"><span>${ch.name}</span>`;
-            btn.onclick = () => {
-                if (ch.link === "") {
-                    alert("ئەم کەناڵە هێشتا لینکی m3u8 بۆ دانەنراوە!");
-                } else {
-                    playM3U8(ch.link);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            };
-            grid.appendChild(btn);
-        });
-
-        function playM3U8(url) {
-            if (Hls.isSupported()) {
-                hls.destroy();
-                hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.play();
-            }
-        }
-        
-        playM3U8(channels[0].link);
-    </script>
-</body>
-</html>
+    // === لێرەوە چەند کەناڵێکی بەتاڵم داناوە بۆ ئەوەی خۆت پڕی بکەیتەوە ===
+    { name: "کەناڵی ٤٢", logo: "https://placehold.co/40?text=42", url: "https://svs.itworkscdn.net/rudawlive/rudawlive.smil/rudawpublish/rudawtv_source/chunks.m3u8" },
+    { name: "کەناڵی ٤٣", logo: "https://placehold.co/40?text=43", url: "https://d1x82nydcxndze.cloudfront.net/live/index.m3u8" },
+    { name: "کەناڵی ٤٤", logo: "https://placehold.co/40?text=44", url: "https://live.channel8.com/Channel8-Kurdish/index.m3u8" },
+    { name: "کەناڵی ٤٥", logo: "https://placehold.co/40?text=45", url: "https://live.nrttv.com/nrt1/index.m3u8" },
+    { name: "کەناڵی ٤٦", logo: "https://placehold.co/40?text=46", url: "https://live.nrttv.com/nrt2/index.m3u8" },
+    { name: "کەناڵی ٤٧", logo: "https://placehold.co/40?text=47", url: "https://live.kurdmax.tv/show/index.m3u8" },
+    { name: "کەناڵی ٤٨", logo: "https://placehold.co/40?text=48", url: "https://waartv.com/live/stream.m3u8" },
+    { name: "کەناڵی ٤٩", logo: "https://placehold.co/40?text=49", url: "https://app-live.org/live/3268334b/index.m3u8" },
+    { name: "کەناڵی ٥٠", logo: "https://placehold.co/40?text=50", url: "https://hlspackager.akamaized.net/live/DB/AVA_TV/HLS/AVA_TV.m3u8" }
+];
